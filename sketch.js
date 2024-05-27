@@ -56,7 +56,7 @@ class Magnifier {
     noFill();
     stroke(255, 255, 255);
     strokeWeight(3);
-    rect(magnifierX, magnifierY, this.size, this.size);
+    rect(magnifierX - 50, magnifierY - 50, this.size, this.size);
   }
 }
 
