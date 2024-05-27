@@ -1,5 +1,6 @@
 class BlackLine {
   constructor(x, y, w, h, adjustW) {
+    // Constructor to initialize position, width, height, and width adjustment
     this.x = x;
     this.y = y;
     this.w = w;
@@ -8,18 +9,19 @@ class BlackLine {
   }
 
   draw(hue) {
-    push();
-    translate(this.x, this.y);
-    rotate(-28);
-    noStroke();
-    fill(hue, 100, 100);
-    rect(0, 0, this.w + this.adjustW, this.h);
-    pop();
+    push(); // Save the current drawing state
+    translate(this.x, this.y); // Translate to the specified position
+    rotate(-28); // Rotate by a specified angle
+    noStroke(); // Remove rectangle stroke
+    fill(hue, 100, 100); // Fill with the current hue
+    rect(0, 0, this.w + this.adjustW, this.h); // Draw the rectangle
+    pop(); // Restore the previous drawing state
   }
 }
 
 class DrawFunction {
   constructor(x, y, rotation, lines, config) {
+    // Constructor to initialize position, rotation angle, number of lines, and config function
     this.x = x;
     this.y = y;
     this.rotation = rotation;
@@ -28,60 +30,62 @@ class DrawFunction {
   }
 
   draw(hue) {
-    push();
-    translate(this.x, this.y);
-    rotate(this.rotation);
+    push(); // Save the current drawing state
+    translate(this.x, this.y); // Translate to the specified position
+    rotate(this.rotation); // Rotate by a specified angle
     for (let i = 0; i < this.lines; i++) {
-      this.config(i, hue);
+      this.config(i, hue); // Use the config function to draw each line
     }
-    pop();
+    pop(); // Restore the previous drawing state
   }
 }
 
+//A class named Magnifier is defined
 class Magnifier {
   constructor(size, zoom) {
-    this.size = size;
-    this.zoom = zoom;
+    this.size = size; //The size of the magnifying glass
+    this.zoom = zoom; //The zoom level of the magnifying glass
   }
-
+//Draw the magnifying glass effect
   draw() {
-    let magnifierX = constrain(mouseX, this.size / 2, width - this.size / 2);
-    let magnifierY = constrain(mouseY, this.size / 2, height - this.size / 2);
+    //Make sure the magnifying glass does not exceed the canvas boundary
+    let magnifierX = constrain(mouseX, this.size / 2, windowWidth - this.size / 2);
+    let magnifierY = constrain(mouseY, this.size / 2, windowHeight - this.size / 2);
 
     // Draw magnified content
-    image(get(magnifierX - this.size / (2 * this.zoom), magnifierY - this.size / (2 * this.zoom), this.size / this.zoom, this.size / this.zoom),
+    image(get(magnifierX - this.size / (3 * this.zoom), magnifierY - this.size / (3 * this.zoom), this.size / this.zoom, this.size / this.zoom),
       magnifierX - this.size / 2, magnifierY - this.size / 2, this.size, this.size);
 
     // Draw magnifier border
     noFill();
     stroke(255, 255, 255);
     strokeWeight(3);
-    rect(magnifierX - 50, magnifierY - 50, this.size, this.size);
+    rect(magnifierX - this.size / 2, magnifierY - this.size / 2, this.size, this.size);
   }
 }
 
-let referenceWidth = 1280;
-let referenceHeight = 720;
+let referenceWidth = 1280; // Reference width for scaling
+let referenceHeight = 720; // Reference height for scaling
 let magnifier;
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  colorMode(HSB, 360, 100, 100);
-  angleMode(DEGREES);
-  magnifier = new Magnifier(100, 2); // Magnifier with size 100 and zoom level 2
+  createCanvas(windowWidth, windowHeight); // Create canvas with window width and height
+  colorMode(HSB, 360, 100, 100); // Use HSB color mode
+  angleMode(DEGREES); // Use degrees for angles
+  magnifier = new Magnifier(120, 3); // Magnifier with size 120 and zoom level 3
 }
 
 function draw() {
-  colorMode(RGB);
-  background(247, 241, 223);
+  colorMode(RGB); // Switch to RGB color mode
+  background(247, 241, 223); // Set the background color
 
-  let scaleFactor = min(width / referenceWidth, height / referenceHeight);
-  translate(width / 2, height / 2);
-  scale(scaleFactor);
-  translate(-referenceWidth / 2, -referenceHeight / 2);
+  let scaleFactor = min(width / referenceWidth, height / referenceHeight); // Calculate the scaling factor
+  translate(width / 2, height / 2); // Translate to the center of the canvas
+  scale(scaleFactor); // Scale by the calculated factor
+  translate(-referenceWidth / 2, -referenceHeight / 2); // Translate to the top-left corner of the reference dimensions
 
-  colorMode(HSB, 360, 100, 100);
-  let hue = (frameCount % 360);
+  colorMode(HSB, 360, 100, 100); // Switch to HSB color mode
+  let hue = (frameCount % 360); // Dynamically change the hue for gradient animation
 
   let blackLines = [
     new BlackLine(280, 731, 190, 4, 4),
@@ -93,92 +97,92 @@ function draw() {
     new BlackLine(336, 540, 505, 10, -12),
     new BlackLine(436, 595, 45, 8, -12),
     new BlackLine(460, 610, 17, 8, -12)
-  ];
+  ]; // Create multiple BlackLine objects
 
   let drawFunctions = [
     new DrawFunction(68, 575, -28, 22, (i, hue) => {
-      noFill();
-      stroke(hue, 100, 100);
+      noFill(); // No fill
+      stroke(hue, 100, 100); // Stroke with the current hue
       let y = i * 6;
       let x1 = 0 + i * 4.5;
       let x2 = 480 - i * 3.7;
-      line(x1, y, x2, y);
+      line(x1, y, x2, y); // Draw line
     }),
     new DrawFunction(843, 154, -28, 57, (i, hue) => {
       if (i >= 20 && i < 33) {
-        noStroke();
+        noStroke(); // No stroke
       } else {
-        noFill();
-        stroke(hue, 100, 100);
+        noFill(); // No fill
+        stroke(hue, 100, 100); // Stroke with the current hue
       }
       let y = i * 6;
       let x1 = 0 - i * 4;
       let x2 = 69 + i * 3.3;
-      line(x1, y, x2, y);
+      line(x1, y, x2, y); // Draw line
       if (i == 7 || i == 13) {
-        noStroke();
-        fill(hue, 100, 100);
+        noStroke(); // No stroke
+        fill(hue, 100, 100); // Fill with the current hue
         if (i == 7) {
-          rect(x1, y, 80, 10);
-          rect(x2, y, 260, 10);
+          rect(x1, y, 80, 10); // Draw rectangle
+          rect(x2, y, 260, 10); // Draw rectangle
         } else if (i == 13) {
-          rect(x1, y, 124, 8);
-          rect(x2, y, 260, 10);
+          rect(x1, y, 124, 8); // Draw rectangle
+          rect(x2, y, 260, 10); // Draw rectangle
         }
       } else if (i == 17) {
-        noStroke();
-        fill(hue, 100, 100);
-        rect(x1, y, 154, 6);
+        noStroke(); // No stroke
+        fill(hue, 100, 100); // Fill with the current hue
+        rect(x1, y, 154, 6); // Draw rectangle
       }
     }),
     new DrawFunction(153, 530, -28, 54, (i, hue) => {
-      noFill();
-      stroke(hue, 100, 100);
+      noFill(); // No fill
+      stroke(hue, 100, 100); // Stroke with the current hue
       let y = i * 6;
       let x1 = 0 + i * 4;
       let x2 = x1 + 50;
-      line(x1, y, x2, y);
+      line(x1, y, x2, y); // Draw line
     }),
     new DrawFunction(238, 712, -28, 20, (i, hue) => {
       if (i >= 10 && i < 14) {
-        noStroke();
+        noStroke(); // No stroke
       } else {
-        noFill();
-        stroke(hue, 100, 100);
+        noFill(); // No fill
+        stroke(hue, 100, 100); // Stroke with the current hue
       }
       let y = i * 6;
       let x1 = 0 + i * 5;
       let x2 = x1 + 1280;
-      line(x1, y, x2, y);
+      line(x1, y, x2, y); // Draw line
     }),
     new DrawFunction(144, 609, -28, 2, (i, hue) => {
-      noFill();
-      stroke(hue, 100, 100);
+      noFill(); // No fill
+      stroke(hue, 100, 100); // Stroke with the current hue
       let y = i * 24;
       let x1 = 0 + i * 16;
       let x2 = x1 + 1200;
-      line(x1, y, x2, y);
+      line(x1, y, x2, y); // Draw line
     }),
     new DrawFunction(94, 651, -28, 9, (i, hue) => {
-      noFill();
-      stroke(hue, 100, 100);
+      noFill(); // No fill
+      stroke(hue, 100, 100); // Stroke with the current hue
       let y = i * 6;
       let x1 = 0 + i * 5;
       let x2 = 440 - i * 3;
-      line(x1, y, x2, y);
+      line(x1, y, x2, y); // Draw line
     }),
     new DrawFunction(812, 423, -28, 1, (i, hue) => {
-      noStroke();
-      fill(hue, 100, 100);
-      rect(0, 0, 311, 5);
+      noStroke(); // No stroke
+      fill(hue, 100, 100); // Fill with the current hue
+      rect(0, 0, 311, 5); // Draw rectangle
     })
-  ];
+  ]; // Create multiple DrawFunction objects
 
-  blackLines.forEach(line => line.draw(hue));
-  drawFunctions.forEach(drawFunc => drawFunc.draw(hue));
+  blackLines.forEach(line => line.draw(hue)); // Draw each BlackLine object
+  drawFunctions.forEach(drawFunc => drawFunc.draw(hue)); // Draw each DrawFunction object
   magnifier.draw();
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(windowWidth, windowHeight); // Resize the canvas
 }
