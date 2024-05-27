@@ -40,39 +40,17 @@ class DrawFunction {
   }
 }
 
-//A class named Magnifier is defined
-class Magnifier {
-  constructor(size, zoom) {
-    this.size = size; //The size of the magnifying glass
-    this.zoom = zoom; //The zoom level of the magnifying glass
-  }
-//Draw the magnifying glass effect
-  draw() {
-    //Make sure the magnifying glass does not exceed the canvas boundary
-    let magnifierX = constrain(mouseX, this.size / 2, windowWidth - this.size / 2);
-    let magnifierY = constrain(mouseY, this.size / 2, windowHeight - this.size / 2);
-
-    // Draw magnified content
-    image(get(magnifierX - this.size / (3 * this.zoom), magnifierY - this.size / (3 * this.zoom), this.size / this.zoom, this.size / this.zoom),
-      magnifierX - this.size / 2, magnifierY - this.size / 2, this.size, this.size);
-
-    // Draw magnifier border
-    noFill();
-    stroke(255, 255, 255);
-    strokeWeight(3);
-    rect(magnifierX - this.size / 2, magnifierY - this.size / 2, this.size, this.size);
-  }
-}
-
 let referenceWidth = 1280; // Reference width for scaling
 let referenceHeight = 720; // Reference height for scaling
-let magnifier;
+let x;
+let y;
+let size = 40;
+let scl = 3;//magnification
 
 function setup() {
   createCanvas(windowWidth, windowHeight); // Create canvas with window width and height
   colorMode(HSB, 360, 100, 100); // Use HSB color mode
   angleMode(DEGREES); // Use degrees for angles
-  magnifier = new Magnifier(120, 3); // Magnifier with size 120 and zoom level 3
 }
 
 function draw() {
@@ -178,9 +156,20 @@ function draw() {
     })
   ]; // Create multiple DrawFunction objects
 
+
   blackLines.forEach(line => line.draw(hue)); // Draw each BlackLine object
   drawFunctions.forEach(drawFunc => drawFunc.draw(hue)); // Draw each DrawFunction object
-  magnifier.draw();
+
+  //Add a magnifying glass that follows the mouse
+  x = mouseX;
+  y = mouseY;
+  //Magnifying glass displays contents
+  copy(x, y, size, size, x, y, size*scl, size*scl);
+  noFill();
+  stroke(255, 255, 255);
+  strokeWeight(3);
+  //Magnifying glass frame
+  rect(x, y, size*scl, size*scl);
 }
 
 function windowResized() {
