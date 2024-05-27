@@ -1,6 +1,5 @@
 # mzhu0779-Creative-coding-major-project
-IDEA 9103 Tut 3 Group C
-This is Mingyue Zhu Creative coding major project 
+IDEA 9103 Tut 3 Group C [This is Mingyue Zhu Creative coding major project]
 * I added a magnifying glass effect to the group work - As the mouse moves, you can see the effect of enlarging the area of the image.
 * The effects I selected are User Input and enlarge the image.
 * This enables the user to view the image in detail.
